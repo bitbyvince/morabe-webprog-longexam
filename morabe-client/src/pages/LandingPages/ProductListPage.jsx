@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import Button from "../../components/Button.jsx";
 import ProductList from "../../components/ProductList.jsx";
 
-const API_URL = "http://localhost:8000/api";
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);

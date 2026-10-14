@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Button from "../../components/Button.jsx";
 import { apiFetch } from "../../services/api";
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 function ProductPage() {
   const { id } = useParams();
