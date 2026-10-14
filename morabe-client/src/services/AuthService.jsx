@@ -13,14 +13,14 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = async (email, password) => {
-    const { data } = await axios.post(`${API_URL}/login`, { email, password });
+    const { data } = await axios.post(`${API_URL}/auth/login`, { email, password });
     localStorage.setItem("user", JSON.stringify(data.data));
     setUser(data.data);
     return data.data;
   };
 
   const register = async (formData) => {
-    const { data } = await axios.post(`${API_URL}/register`, formData);
+    const { data } = await axios.post(`${API_URL}/auth/register`, formData);
     localStorage.setItem("user", JSON.stringify(data.data));
     setUser(data.data);
     return data.data;
