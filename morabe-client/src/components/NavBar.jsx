@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo.png";
+import { useAuth } from "../services/AuthService";
 
 const links = [
   { label: "Home", to: "/" },
@@ -18,7 +19,18 @@ const navLinkClassName = ({ isActive }) =>
 const authLinkClassName =
   "rounded-full border-2 border-amber-900 bg-amber-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-amber-900 transition hover:bg-amber-900 hover:text-amber-50";
 
+const logoutButtonClassName =
+  "rounded-full border-2 border-amber-900 bg-amber-900 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-amber-50 transition hover:bg-amber-800";
+
 const NavBar = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b-2 border-amber-900 bg-amber-50/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -33,26 +45,64 @@ const NavBar = () => {
           </div>
         </NavLink>
 
-        <nav className="hidden items-center gap-2 md:flex">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === "/"}
-              className={navLinkClassName}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        <div className="flex items-center gap-6">
+          <nav className="hidden items-center gap-2 md:flex">
+            {links.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === "/"}
+                className={navLinkClassName}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+            {user && (
+              <NavLink to="/cart" className={navLinkClassName}>
+                Cart
+              </NavLink>
+            )}
+            {user && (
+              <NavLink to="/orders" className={navLinkClassName}>
+                Orders
+              </NavLink>
+            )}
+            {user && (
+              <NavLink to="/profile" className={navLinkClassName}>
+                Profile
+              </NavLink>
+            )}
+            {user && (user.role === "admin" || user.role === "seller") && (
+              <NavLink to="/dashboard" className={navLinkClassName}>
+                Dashboard
+              </NavLink>
+            )}
+          </nav>
 
-        <div className="flex items-center gap-2">
-          <NavLink to="/auth/signin" className={authLinkClassName}>
-            Sign In
-          </NavLink>
-          <NavLink to="/auth/signup" className={authLinkClassName}>
-            Sign Up
-          </NavLink>
+          <div className="flex items-center gap-3">
+            {user ? (
+              <>
+                <span className="text-sm font-semibold text-amber-900">
+                  Hi, {user.firstName}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className={logoutButtonClassName}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/auth/signin" className={authLinkClassName}>
+                  Sign In
+                </NavLink>
+                <NavLink to="/auth/signup" className={authLinkClassName}>
+                  Sign Up
+                </NavLink>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>
